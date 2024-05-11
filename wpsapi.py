@@ -76,6 +76,7 @@ def analysis_quote(quote):
     quote_str = quote_str.replace("</blockquote>", "")
     quote_str = quote_str.replace("<em> </em>", "")
     quote_str = quote_str.replace("<br />", "\r\n")
+    quote_str = quote_str.replace("<br/>", "\r\n")
     quote_list = add_prefix_to_each_line(quote_str, "> ")
     print(quote_list, type(quote_list))
     return quote_list
