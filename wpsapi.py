@@ -102,11 +102,27 @@ def analysis_highlight_block(highlight_block):
 
 # 解析代码块
 def analysis_code_block(code_block):
-    if code_block.name != 'pre':
-        return None
-    code_str = code_block.text
-    code_list = add_prefix_to_each_line(code_str, "    ")
-    return code_list
+    if code_block.name != 'nodeview':
+        return None , None
+    code_block_dict = code_block.attrs
+    if 'data-node-type' not in code_block_dict:
+        return None , None
+    code_block_type = code_block_dict['data-node-type']
+    if code_block_type != 'code_block':
+        return None , None
+    code_block_all = code_block.find('pre')
+    code_block_dict = code_block_all.attrs
+    if 'lang' not in code_block_dict:
+        return None , None
+    code_block_list = []
+    for son_tag in code_block_all:
+        if son_tag.name == 'div':
+            code_block_type = son_tag.text
+            continue
+        if son_tag.name == 'code':
+            code_block_list = son_tag.text.split('\n')
+            continue
+    return code_block_list, code_block_type
 
 # 解析p标签
 def analysis_p(pdata):
@@ -142,12 +158,18 @@ def analysis_block_tile(block_tile):
         # if quote_test:
         #     print(quote_test)
         #     continue
-        highlight_test = analysis_highlight_block(son_tag)
-        if highlight_test:
-            print(highlight_test)
+        # highlight_test = analysis_highlight_block(son_tag)
+        # if highlight_test:
+        #     print(highlight_test)
+        #     continue
+        code_test_list, code_test_type = analysis_code_block(son_tag)
+        if code_test_list:
+            print(code_test_list,type(code_test_list))
+            print(code_test_type,type(code_test_type))
         # p_test = analysis_p(son_tag)
         # if p_test:
         #     print(p_test)
+        #     continue
 
 
 # 将html文件转换为md文件
