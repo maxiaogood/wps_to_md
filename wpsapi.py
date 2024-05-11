@@ -139,9 +139,10 @@ def analysis_p(pdata):
     elif pdata_type == 'outline-order-list-item': # 有序列表
         return "1. " + pdata.text
     elif pdata_type == 'outline-todo-list-item': # 任务列表
+        if "listvalue" in pdata_dict:
+            if pdata_dict["listvalue"] == "checked":
+                return "- [x] " + pdata.text
         return "- [ ] " + pdata.text
-    elif pdata_type == 'outline-done-list-item': # 已完成任务列表
-        return "- [x] " + pdata.text
     return None
 
 # 解析块数据
@@ -150,26 +151,26 @@ def analysis_block_tile(block_tile):
         # print("标签名：", son_tag.name)
         # print("属性：", son_tag.attrs)
         # print("文本内容：", son_tag.text)
-        # title = analysis_title(son_tag)
-        # if title:
-        #     print(title)
-        #     continue
-        # quote_test = analysis_quote(son_tag)
-        # if quote_test:
-        #     print(quote_test)
-        #     continue
-        # highlight_test = analysis_highlight_block(son_tag)
-        # if highlight_test:
-        #     print(highlight_test)
-        #     continue
+        title = analysis_title(son_tag)
+        if title:
+            print(title)
+            continue
+        quote_test = analysis_quote(son_tag)
+        if quote_test:
+            print(quote_test)
+            continue
+        highlight_test = analysis_highlight_block(son_tag)
+        if highlight_test:
+            print(highlight_test)
+            continue
         code_test_list, code_test_type = analysis_code_block(son_tag)
         if code_test_list:
             print(code_test_list,type(code_test_list))
             print(code_test_type,type(code_test_type))
-        # p_test = analysis_p(son_tag)
-        # if p_test:
-        #     print(p_test)
-        #     continue
+        p_test = analysis_p(son_tag)
+        if p_test:
+            print(p_test)
+            continue
 
 
 # 将html文件转换为md文件
@@ -180,7 +181,7 @@ def convert_html_to_md(html_path, md_path):
         print(soup.title)
         script_blocks = soup.find_all('div', class_='block_tile')
         for script in script_blocks:
-            #print(script, type(script))
+            # print(script)
             analysis_block_tile(script)
         return script_blocks
 
