@@ -78,8 +78,35 @@ def analysis_quote(quote):
     quote_str = quote_str.replace("<br />", "\r\n")
     quote_str = quote_str.replace("<br/>", "\r\n")
     quote_list = add_prefix_to_each_line(quote_str, "> ")
-    print(quote_list, type(quote_list))
     return quote_list
+
+# 解析高亮块
+def analysis_highlight_block(highlight_block):
+    if highlight_block.name != 'div':
+        return None
+    highlight_block_dict = highlight_block.attrs
+    if 'class' not in highlight_block_dict:
+        return None
+    highlight_type = highlight_block_dict['class'][1]
+    if highlight_type != 'highlight_block':
+        return None
+    highlight_block_all = highlight_block.find_all('div', class_='sub-doc-tile')
+    highlight_list = []
+    for son_tag in highlight_block_all:
+        if son_tag.name != 'div':
+            continue
+        # if son_tag.text == 📌:
+        #     continue
+        highlight_list.append(son_tag.text)
+    return highlight_list
+
+# 解析代码块
+def analysis_code_block(code_block):
+    if code_block.name != 'pre':
+        return None
+    code_str = code_block.text
+    code_list = add_prefix_to_each_line(code_str, "    ")
+    return code_list
 
 # 解析p标签
 def analysis_p(pdata):
@@ -111,10 +138,13 @@ def analysis_block_tile(block_tile):
         # if title:
         #     print(title)
         #     continue
-        quote_test = analysis_quote(son_tag)
-        if quote_test:
-            print(quote_test)
-            continue
+        # quote_test = analysis_quote(son_tag)
+        # if quote_test:
+        #     print(quote_test)
+        #     continue
+        highlight_test = analysis_highlight_block(son_tag)
+        if highlight_test:
+            print(highlight_test)
         # p_test = analysis_p(son_tag)
         # if p_test:
         #     print(p_test)
