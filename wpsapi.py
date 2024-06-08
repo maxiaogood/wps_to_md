@@ -23,8 +23,8 @@ def extract_filename_from_string(pattern, text):
 
 # 下载文件并重命名
 def download_file(url, save_path):
-    tmp_html= "/tmp/my_wps_to_md_tmp.html"
-    command = f"wget {url} -O {tmp_html}"
+    tmp_html= "./tmp/my_wps_to_md_tmp.html"
+    command = f"./wget.exe {url} -O {tmp_html}"
     os.system(command)
     html_file_name_str = find_otl_strings(tmp_html, ".otl</title>")
     print(html_file_name_str, type(html_file_name_str))
@@ -198,12 +198,12 @@ def prosemirror_to_markdown(prosemirror_content):
     return markdown_content
 
 if __name__ == "__main__":
-    # url = "https://kdocs.cn/l/ckQ4sn6AvTXC"
-    # html_path = "./tmp"
-    # download_file(url, html_path)
-    html_path = "./tmp/wpsapi测试文档.html"
-    md_path = "./tmp/wpsapi测试文档.md"
-    html_text = convert_html_to_md(html_path, md_path)
+    url = "https://kdocs.cn/l/ckQ4sn6AvTXC"
+    html_path = "./tmp"
+    download_file(url, html_path)
+    # html_path = "./tmp/wpsapi测试文档.html"
+    # md_path = "./tmp/wpsapi测试文档.md"
+    # html_text = convert_html_to_md(html_path, md_path)
     # html_path = "./tmp/正文.html"
     # prosemirror_to_markdown(html_path)
 
